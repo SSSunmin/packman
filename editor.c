@@ -120,8 +120,6 @@ void Readmap()
 	}
 }
 
-
-
 void Freemap()
 {
 	for (i = 0; i < HEIGHT; i++)
@@ -130,7 +128,6 @@ void Freemap()
 	}
 	free(map);
 }
-
 
 void Editmap()
 {
@@ -200,6 +197,54 @@ void Editmap()
 		break;
 	}
 	Drawmap2();
+}
+
+void Savemap()
+{
+	if (isloadfile == 0) {
+		gotoxy(4, 4);
+		printf("Input filename");
+		scanf("%s", filename);
+	}
+
+	fp = fopen(filename, "w+");
+
+	if (fp == NULL) 
+	{
+		gotoxy(5,3);
+		printf("file error");
+	}
+	else
+	{
+		for (i = 0; i < HEIGHT; i++)
+		{
+			for (j = 0; j < WIDTH; j++)
+			{
+				if (map[i][j] == MONSTER || map[i][j] == MONSTER2)
+				{
+					fprintf(fp, "%c",'m');
+				}
+				else if (map[i][j] == PLAYER)
+				{
+					fprintf(fp, "%c", 'p');
+				}
+				else if (map[i][j] == ITEM)
+				{
+					fprintf(fp, "%c", 'i');
+				}
+				else 
+				{
+					fprintf(fp, "%d", map[i][j]);
+				}
+			}
+			fputs("\n", fp);
+		}
+		fclose(fp);
+		delay(300);
+		gotoxy(5, START_Y + HEIGHT + 10);
+		printf("save success!!");
+		isedit = 0;
+	}
 }
 
 void Inputkey()
