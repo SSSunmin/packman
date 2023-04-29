@@ -386,16 +386,22 @@ void Movemonster(int monnum, int(*map)[WIDTH])
 	}
 }
 
-void main()
-{
-    clrscr();
+void InitGame() {
+	monstercounter = 0;
+	clrscr();
 	Readmap();
 	clrscr();
 	DrawMap();
 	InitMonstermap();
 	SeacrchPlayer();
 	SeacrchMonster();
+	beforePosX = playerX;
+	beforePosY = playerY;
+}
 
+void main()
+{
+	InitGame();
     while (isPlay)
 	{
 		if (kbhit())
@@ -430,16 +436,7 @@ void main()
 			delay(2000);
 			stagenum++;
 			if (stagenum < 3) {
-				monstercounter = 0;
-                clrscr();
-                Readmap();
-                clrscr();
-                DrawMap();
-                InitMonstermap();
-                SeacrchPlayer();
-                SeacrchMonster();
-                beforePosX = playerX;
-                beforePosY = playerY;
+	            InitGame();
 			}
 			else {
 				isPlay = 0;
