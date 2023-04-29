@@ -32,10 +32,15 @@ int j = 0;
 
 int playerX = 0;
 int playerY = 0;
+int beforePosX = 0;
+int beforePosY = 0;
 int monster1X = 0;
 int monster1Y = 0;
 int monster2X = 0;
 int monster2Y = 0;
+
+char input = 0;
+int isPlay = 1;
 
 //파일 입출력
 char path[256] = "c:\\tc30\\bin\\";
@@ -47,6 +52,7 @@ FILE *fp;
 
 int stagenum = 0;
 int monstercounter = 0;
+
 void SeacrchPlayer()
 {
 	for (i = 0; i < HEIGHT; i++)
@@ -87,6 +93,7 @@ void SeacrchMonster()
 		}
 	}
 }
+
 void Readmap()
 {
 	int tmp[1000];
@@ -185,4 +192,42 @@ void main()
 	DrawMap();
     SeacrchPlayer();
 	SeacrchMonster();
+
+    while (isPlay)
+	{
+		if (kbhit())
+		{
+			input = getch();	
+		}
+		switch (input)
+		{
+		case 'a':
+			playerX--;
+			break;
+
+		case 'd':
+			playerX++;
+			break;
+
+		case 'w':
+			playerY--;
+			break;
+
+		case's':
+			playerY++;
+			break;
+
+		case 'q':
+			return;
+
+		}
+        gotoxy(beforePosX, beforePosY);
+        printf(" ");
+        gotoxy(playerX, playerY);
+        printf("%c", player);
+        beforePosX = playerX;
+        beforePosY = playerY;
+        delay(200);
+	}
+	delay(200);
 }
