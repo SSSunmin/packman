@@ -8,6 +8,7 @@
 #define DOWN 30001
 #define RIGHT 30002
 #define LEFT 30003
+#define CHECK 999
 
 #define START_X 5    
 #define START_Y 5
@@ -38,9 +39,15 @@ int monster1X = 0;
 int monster1Y = 0;
 int monster2X = 0;
 int monster2Y = 0;
+int mon1oldX = 0;
+int mon1oldY = 0;
+int mon2oldX = 0;
+int mon2oldY = 0;
 
 char input = 0;
 int isPlay = 1;
+char quit = 0;
+int endnum = 0;
 
 //파일 입출력
 char path[256] = "c:\\tc30\\bin\\";
@@ -52,6 +59,18 @@ FILE *fp;
 
 int stagenum = 0;
 int monstercounter = 0;
+
+void InitMonstermap()
+{
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			monstermap1[i][j] = map[i][j];
+			monstermap2[i][j] = map[i][j];
+		}
+	}
+}
 
 void SeacrchPlayer()
 {
@@ -183,6 +202,183 @@ void DrawMap()
       }
       printf("\n");
    }
+}
+
+void CheckNum(int m_x, int m_y, int num, int(*map)[WIDTH])
+{
+	int xpos = m_x;
+	int ypos = m_y;
+
+	if (quit == 'q' || quit == 'Q')
+		return;
+
+	map[ypos - START_Y][xpos - START_X] = num;
+
+	if (m_x == playerX && m_y == playerY)
+	{
+		endnum = num;
+		return;
+	}
+	if (map[ypos - START_Y][xpos + 1 - START_X] == 0 || map[ypos - START_Y][xpos + 1 - START_X] > num + 1)
+	{
+		CheckNum(xpos + 1, ypos, num + 1, map);
+	}
+
+	if (map[ypos - 1 - START_Y][xpos - START_X] == 0 || map[ypos - 1 - START_Y][xpos - START_X] > num + 1)
+	{
+		CheckNum(xpos, ypos - 1, num + 1, map);
+	}
+
+	if (map[ypos - START_Y][xpos - 1 - START_X] == 0 || map[ypos - START_Y][xpos - 1 - START_X] > num + 1)
+	{
+		CheckNum(xpos - 1, ypos, num + 1, map);
+	}
+
+	if (map[ypos + 1 - START_Y][xpos - START_X] == 0 || map[ypos + 1 - START_Y][xpos - START_X] > num + 1)
+	{
+		CheckNum(xpos, ypos + 1, num + 1, map);
+	}
+}
+
+void FindPath(int num, int(*map)[WIDTH],int monnum)
+{
+	map[playerY - START_Y][playerX - START_X] = CHECK;
+	if (monnum == 0 && playerX == monster1X && playerY == monster1Y)
+	{
+		return;
+	}
+	else if (monnum == 1 && playerX == monster2X && playerY == monster2Y) 
+	{
+		return;
+	}
+	
+	if (map[playerY - START_Y][playerX + 1 - START_X] == num - 1)
+	{
+		FindPath(playerX + 1, playerY, num - 1, map, monnum);
+	}
+	else if (map[playerY - START_Y - 1][playerX - START_X] == num - 1)
+	{
+		FindPath(playerX, playerY - 1, num - 1, map, monnum);
+	}
+	else if (map[playerY - START_Y][playerX - START_X - 1] == num - 1)
+	{
+		FindPath(playerX - 1, playerY, num - 1, map, monnum);
+	}
+	else
+	{
+		FindPath(playerX, playerY + 1, num - 1, map, monnum);
+	}
+}
+
+int CheckMoveDir(int x, int y, int(*map)[WIDTH])
+{
+	int xpos = x - START_X;
+	int ypos = y - START_Y;
+	int dir = RIGHT;
+
+	if (map[ypos][xpos + 1] == CHECK)
+	{
+		map[ypos][xpos + 1] = 0;
+		dir = RIGHT;
+	}
+	else if (map[ypos - 1][xpos] == CHECK)
+	{
+		map[ypos - 1][xpos] = 0;
+		dir = UP;
+	}
+	else if (map[ypos][xpos - 1] == CHECK)
+	{
+		map[ypos][xpos - 1] = 0;
+		dir = LEFT;
+	}
+	else if (map[ypos + 1][xpos] == CHECK)
+	{
+		map[ypos + 1][xpos] = 0;
+		dir = DOWN;
+	}
+	return dir;
+}
+
+void Movemonster(int monnum, int(*map)[WIDTH])
+{
+	int dir = 0;
+	if ((monster1X == playerX && monster1Y == playerY) || (monster2X == playerX && monster2Y == playerY))
+	{
+		isPlay = 0;
+		delay(2000);
+		return;
+	}
+	if (monnum == 0)
+	{
+		CheckNum(monster1X, monster1Y, 1, map);
+		FindPath(playerX, playerY, endnum, map, monnum);
+		gotoxy(monster1X, monster1Y);
+		printf("%c", monster);
+		gotoxy(mon1oldX, mon1oldY);
+		printf(" ");
+		mon1oldX = monster1X;
+		mon1oldY = monster1Y;
+		dir = CheckMoveDir(monster1X, monster1Y, map);
+	}
+	else
+	{
+		CheckNum(monster2X, monster2Y, 1, map);
+		FindPath(playerX, playerY, endnum, map,monnum);
+		gotoxy(monster2X, monster2Y);
+		printf("%c", monster);
+		gotoxy(mon2oldX, mon2oldY);
+		printf(" ");
+		mon2oldX = monster2X;
+		mon2oldY = monster2Y;
+		dir = CheckMoveDir(monster2X, monster2Y, map);
+	}
+
+	switch (dir)
+	{
+	case RIGHT:
+		if (monnum == 0)
+		{
+			monster1X++;
+		}
+		else
+		{
+			monster2X++;
+		}
+		break;
+
+	case UP:
+		if (monnum == 0)
+		{
+			monster1Y--;
+		}
+		else
+		{
+			monster2Y--;
+		}
+		break;
+
+	case LEFT:
+		if (monnum == 0)
+		{
+			monster1X--;
+		}
+		else
+		{
+			monster2X--;
+		}
+		break;
+
+	case DOWN:
+		if (monnum == 0)
+		{
+			monster1Y++;
+		}
+		else
+		{
+			monster2Y++;
+		}
+		break;
+	}
 }
 
 void main()
