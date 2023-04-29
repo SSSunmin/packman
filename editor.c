@@ -345,6 +345,7 @@ void Drawmap()
 	ypos = HEIGHT / 2;
 	gotoxy(START_X+ xpos, START_Y + ypos);
 }
+
 void Drawmap2()
 {
 	for (i = 0; i < HEIGHT; i++)
@@ -357,7 +358,6 @@ void Drawmap2()
 		printf("\n");
 	}
 }
-
 
 void main()
 {
@@ -381,6 +381,8 @@ void main()
 
 	while (isedit)
 	{
+        gotoxy(5, 2);
+		printf("1 : wall 2 : monster 3 : player 4 : eraser 5: item 6 : savemap");
 		Inputkey();
 	}
 }
