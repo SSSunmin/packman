@@ -240,33 +240,36 @@ void CheckNum(int m_x, int m_y, int num, int(*map)[WIDTH])
 	}
 }
 
-void FindPath(int num, int(*map)[WIDTH],int monnum)
+void FindPath(int p_x, int p_y, int num, int(*map)[WIDTH],int monnum)
 {
-	map[playerY - START_Y][playerX - START_X] = CHECK;
-	if (monnum == 0 && playerX == monster1X && playerY == monster1Y)
+	int xpos = p_x;
+	int ypos = p_y;
+
+	map[ypos - START_Y][xpos - START_X] = CHECK;
+	if (monnum == 0 && xpos == monster1X && ypos == monster1Y)
 	{
 		return;
 	}
-	else if (monnum == 1 && playerX == monster2X && playerY == monster2Y) 
+	else if (monnum == 1 && xpos == monster2X && ypos == monster2Y) 
 	{
 		return;
 	}
 	
-	if (map[playerY - START_Y][playerX + 1 - START_X] == num - 1)
+	if (map[ypos - START_Y][xpos + 1 - START_X] == num - 1)
 	{
-		FindPath(playerX + 1, playerY, num - 1, map, monnum);
+		FindPath(xpos + 1, ypos, num - 1, map, monnum);
 	}
-	else if (map[playerY - START_Y - 1][playerX - START_X] == num - 1)
+	else if (map[ypos - START_Y - 1][xpos - START_X] == num - 1)
 	{
-		FindPath(playerX, playerY - 1, num - 1, map, monnum);
+		FindPath(xpos, ypos - 1, num - 1, map, monnum);
 	}
-	else if (map[playerY - START_Y][playerX - START_X - 1] == num - 1)
+	else if (map[ypos - START_Y][xpos - START_X - 1] == num - 1)
 	{
-		FindPath(playerX - 1, playerY, num - 1, map, monnum);
+		FindPath(xpos - 1, ypos, num - 1, map, monnum);
 	}
 	else
 	{
-		FindPath(playerX, playerY + 1, num - 1, map, monnum);
+		FindPath(xpos, ypos + 1, num - 1, map, monnum);
 	}
 }
 
@@ -305,6 +308,8 @@ void Movemonster(int monnum, int(*map)[WIDTH])
 	if ((monster1X == playerX && monster1Y == playerY) || (monster2X == playerX && monster2Y == playerY))
 	{
 		isPlay = 0;
+		gotoxy(5,4);
+		printf("fail");
 		delay(2000);
 		return;
 	}
@@ -429,6 +434,8 @@ void main()
         beforePosX = playerX;
         beforePosY = playerY;
         delay(200);
+        Movemonster(0, monstermap1);
+        Movemonster(1, monstermap2);
 	}
 	delay(200);
 }
