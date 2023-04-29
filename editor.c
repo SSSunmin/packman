@@ -22,6 +22,7 @@ int xpos = 0;
 int ypos = 0;
 char menu = -1;
 int i =0;
+int j =0;
 
 void Freemap()
 {
@@ -98,9 +99,59 @@ void Inputkey()
 	}
 }
 
+void Drawmap()
+{
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			if (map[i][j] == -1) 
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", 178);
+			}
+			else if (map[i][j] == MONSTER)
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", 1);
+			}
+			else if (map[i][j] == PLAYER)
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", 2);
+			}
+			else if (map[i][j] == ITEM)
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", 3);
+			}
+		}
+		printf("\n");
+	}
+	xpos = WIDTH / 2;
+	ypos = HEIGHT / 2;
+	gotoxy(START_X+ xpos, START_Y + ypos);
+}
+void Drawmap2()
+{
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			gotoxy(START_X + j + WIDTH + 5, START_Y + i);
+			printf("%d",map[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+
 void main()
 {
     clrscr();
+    
+	Drawmap2();
+	Drawmap();
 
 	while (isedit)
 	{
