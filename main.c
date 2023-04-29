@@ -221,6 +221,11 @@ void main()
 			return;
 
 		}
+        if (map[playerY - START_Y][playerX - START_X] == -1)
+        {
+            playerX = beforePosX;
+            playerY = beforePosY;
+        }
         gotoxy(beforePosX, beforePosY);
         printf(" ");
         gotoxy(playerX, playerY);
