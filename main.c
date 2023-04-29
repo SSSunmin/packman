@@ -397,6 +397,9 @@ void InitGame() {
 	SeacrchMonster();
 	beforePosX = playerX;
 	beforePosY = playerY;
+
+    gotoxy(5, 3);
+	printf("stage %d", stagenum + 1);
 }
 
 void main()
