@@ -22,6 +22,9 @@ int xpos = 0;
 int ypos = 0;
 char menu = -1;
 
+int monstercounter = 0;
+int playercounter = 0;
+
 char filename[30];
 char path[256] = "c:\\tc30\\bin\\";
 char fullfilename[256];
@@ -128,9 +131,75 @@ void Freemap()
 	free(map);
 }
 
+
 void Editmap()
 {
-	
+	gotoxy(4, 4);
+	printf("                                                                                 ");
+	switch (menu)
+	{
+	case '1':
+		map[ypos][xpos] = -1;
+		gotoxy(START_X + xpos, START_Y + ypos);
+		printf("%c", 178);
+		break;
+
+	case '2':
+		if (monstercounter < 2) {
+			if (monstercounter == 0) {
+				map[ypos][xpos] = MONSTER;
+			}
+			else {
+				map[ypos][xpos] = MONSTER2;
+			}	
+			monstercounter++;
+
+			gotoxy(START_X + xpos, START_Y + ypos);
+			printf("%c", 1);
+
+		}
+		else{
+			gotoxy(4,4);
+			printf("A maximum of two monsters can be placed.");
+		}	
+		break;
+
+	case '3':
+		if (playercounter == 0) {
+			map[ypos][xpos] = PLAYER;
+			gotoxy(START_X + xpos, START_Y + ypos);
+			printf("%c", 2);
+			playercounter++;
+		}
+		else {
+			gotoxy(4, 4);
+			printf("There must be only one player.");
+		}
+		break;
+
+	case '4':
+		if (map[ypos][xpos] == PLAYER) {
+			playercounter--;
+		}
+		else if (map[ypos][xpos] == MONSTER || map[ypos][xpos] == MONSTER2) {
+			monstercounter--;
+		}
+		map[ypos][xpos] = 0;
+		gotoxy(START_X + xpos, START_Y + ypos);
+		printf(" ");
+		break;
+
+	case '5':
+		map[ypos][xpos] = ITEM;
+		gotoxy(START_X + xpos, START_Y + ypos);
+		printf("%c", 3);	
+		break;
+
+	case '6':
+		Savemap();
+		break;
+	}
+	Drawmap2();
 }
 
 void Inputkey()
@@ -260,7 +329,7 @@ void main()
 	{
 		Readmap();
 	}
-    
+
 	clrscr();
 	Drawmap2();
 	Drawmap();
