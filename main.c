@@ -30,6 +30,13 @@ char wall = 178;
 int i = 0;
 int j = 0;
 
+int playerX = 0;
+int playerY = 0;
+int monster1X = 0;
+int monster1Y = 0;
+int monster2X = 0;
+int monster2Y = 0;
+
 //파일 입출력
 char path[256] = "c:\\tc30\\bin\\";
 char isloadfile = 0;
@@ -40,7 +47,46 @@ FILE *fp;
 
 int stagenum = 0;
 int monstercounter = 0;
+void SeacrchPlayer()
+{
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			if (map[i][j] == PLAYER) {
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", player);
+				playerX = START_X + j;
+				playerY = START_Y + i;
+				return;
+			}
+		}
+	}
+}
 
+void SeacrchMonster()
+{
+	for (i = 0; i < HEIGHT; i++)
+	{
+		for (j = 0; j < WIDTH; j++)
+		{
+			if (map[i][j] == MONSTER1)
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", monster);
+				monster1X = START_X + j;
+				monster1Y = START_Y + i;
+			}
+			else if(map[i][j] == MONSTER2) 
+			{
+				gotoxy(START_X + j, START_Y + i);
+				printf("%c", monster);
+				monster2X = START_X + j;
+				monster2Y = START_Y + i;
+			}
+		}
+	}
+}
 void Readmap()
 {
 	int tmp[1000];
@@ -137,4 +183,6 @@ void main()
     clrscr();
 	Readmap();
 	DrawMap();
+    SeacrchPlayer();
+	SeacrchMonster();
 }
