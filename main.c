@@ -390,8 +390,10 @@ void main()
 {
     clrscr();
 	Readmap();
+	clrscr();
 	DrawMap();
-    SeacrchPlayer();
+	InitMonstermap();
+	SeacrchPlayer();
 	SeacrchMonster();
 
     while (isPlay)
@@ -422,20 +424,43 @@ void main()
 			return;
 
 		}
-        if (map[playerY - START_Y][playerX - START_X] == -1)
-        {
-            playerX = beforePosX;
-            playerY = beforePosY;
-        }
-        gotoxy(beforePosX, beforePosY);
-        printf(" ");
-        gotoxy(playerX, playerY);
-        printf("%c", player);
-        beforePosX = playerX;
-        beforePosY = playerY;
-        delay(200);
-        Movemonster(0, monstermap1);
-        Movemonster(1, monstermap2);
+       	if (map[playerY - START_Y][playerX - START_X] == ITEM) {
+			gotoxy(5, 4);
+			printf("success!!");
+			delay(2000);
+			stagenum++;
+			if (stagenum < 3) {
+				monstercounter = 0;
+                clrscr();
+                Readmap();
+                clrscr();
+                DrawMap();
+                InitMonstermap();
+                SeacrchPlayer();
+                SeacrchMonster();
+                beforePosX = playerX;
+                beforePosY = playerY;
+			}
+			else {
+				isPlay = 0;
+			}		
+		}
+		else {
+			if (map[playerY - START_Y][playerX - START_X] == -1)
+			{
+				playerX = beforePosX;
+				playerY = beforePosY;
+			}
+			gotoxy(beforePosX, beforePosY);
+			printf(" ");
+			gotoxy(playerX, playerY);
+			printf("%c", player);
+			beforePosX = playerX;
+			beforePosY = playerY;
+			delay(200);
+			Movemonster(0, monstermap1);
+			Movemonster(1, monstermap2);
+		}
 	}
 	delay(200);
 }
